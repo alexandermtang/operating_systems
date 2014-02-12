@@ -2,10 +2,16 @@ CC=gcc
 CFLAGS=-Wall -g
 
 build:
-	make my_timer.o part2.o part2
+	make my_timer.o part1.o part2.o part1 part2
 
 my_timer.o: my_timer.h my_timer.c
 	$(CC) $(CFLAGS) -c my_timer.c
+
+part1: my_timer.o part1.o
+	$(CC) $(CFLAGS) my_timer.o part1.o -o part1
+
+part1.o: part1.c
+	$(CC) $(CFLAGS) -c part1.c
 
 part2: my_timer.o part2.o
 	$(CC) $(CFLAGS) my_timer.o part2.o -o part2
