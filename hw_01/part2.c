@@ -4,6 +4,8 @@
 
 #include "my_timer.h"
 
+#define NUM_ITERS 10000
+
 int main(int argc, char** argv)
 {
   if (argc < 2) {
@@ -11,13 +13,12 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  int num_iters = 10000;
-  unsigned long long fork_times[num_iters];
+  unsigned long long fork_times[NUM_ITERS];
 
   unsigned long block_size_MB = (int)strtol(argv[1], NULL, 10);
   unsigned long block_size_B = block_size_MB * 1000; // convert from MB to B
 
-  for (int i = 0; i < num_iters; i++) {
+  for (int i = 0; i < NUM_ITERS; i++) {
 
     // allocate memory for arr and initialize to 'a'
     char *arr = malloc(block_size_B);
@@ -40,8 +41,8 @@ int main(int argc, char** argv)
 
   // calculate avg cost of fork
   double fork_avg = 0.0;
-  for (int i = 0; i < num_iters; i++) { fork_avg += fork_times[i]; }
-  fork_avg /= num_iters;
+  for (int i = 0; i < NUM_ITERS; i++) { fork_avg += fork_times[i]; }
+  fork_avg /= NUM_ITERS;
 
   printf("avg cost of fork for %lu MB block: %.2f us\n", block_size_MB, fork_avg);
 
