@@ -11,31 +11,32 @@
 int main(int argc, char** argv)
 {
   int arr[ARR_SIZE], dummy;
+  int i = 0, j = 0;
 
   // map array to physical memory
-  for (int i = 0; i < ARR_SIZE; i++) { arr[i] = rand() % INT_MAX; }
+  for (i = 0; i < ARR_SIZE; i++) { arr[i] = rand() % INT_MAX; }
 
   timer_start();
-  for (int j = 0; j < 1000; j++) {
-    for (int i = 0; i < ARR_SIZE; i++) { dummy = arr[i]; }
+  for (j = 0; j < 1000; j++) {
+    for (i = 0; i < ARR_SIZE; i++) { dummy = arr[i]; }
   }
   timer_stop();
 
   timer_start();
-  for (int j = 0; j < 1000; j++) {
+  for (j = 0; j < 1000; j++) {
     for (int i = 0; i < ARR_SIZE; i+=2) { dummy = arr[i]; }
   }
   timer_stop();
 
   timer_start();
-  for (int j = 0; j < 1000; j++) {
-    for (int i = 0; i < ARR_SIZE; i+=4) { dummy = arr[i]; }
+  for (j = 0; j < 1000; j++) {
+    for (i = 0; i < ARR_SIZE; i+=4) { dummy = arr[i]; }
   }
   timer_stop();
 
   timer_start();
-  for (int j = 0; j < 1000; j++) {
-    for (int i = 0; i < ARR_SIZE; i+=1024) { dummy = arr[i]; }
+  for (j = 0; j < 1000; j++) {
+    for (i = 0; i < ARR_SIZE; i+=1024) { dummy = arr[i]; }
   }
   timer_stop();
 
