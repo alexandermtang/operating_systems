@@ -8,7 +8,7 @@ my_timer.o: my_timer.h my_timer.c
 	$(CC) $(CFLAGS) -c my_timer.c
 
 part1: my_timer.o part1.o
-	$(CC) $(CFLAGS) my_timer.o part1.o -o part1
+	$(CC) $(CFLAGS) my_timer.o part1.o -o part1 -lm
 
 part1.o: part1.c
 	$(CC) $(CFLAGS) -c part1.c
