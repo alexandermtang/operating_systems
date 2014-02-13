@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 
   timer_start();
   for (j = 0; j < 1000; j++) {
-    for (int i = 0; i < ARR_SIZE; i+=2) { dummy = arr[i]; }
+    for (i = 0; i < ARR_SIZE; i+=2) { dummy = arr[i]; }
   }
   timer_stop();
 
