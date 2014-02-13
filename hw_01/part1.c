@@ -5,40 +5,34 @@
 
 #include "my_timer.h"
 
-#define ARR_SIZE (1024 * 1024)
-#define NUM_TIMES 1000
+#define KB 1024
+#define MB (1024 * KB)
+#define ARR_SIZE (8 * MB)
+#define MAX_STRIDE 512
 
 int main(int argc, char** argv)
 {
-  int arr[ARR_SIZE], dummy;
-  int i = 0, j = 0;
+  int num_ints = ARR_SIZE / sizeof(int);
+  int *arr = malloc(ARR_SIZE / sizeof(int));
+  int lengthMod = ARR_SIZE / sizeof(int) - 1;
+  int i = 0, j = 0, stride = 0, dummy = 0;
 
   // map array to physical memory
-  for (i = 0; i < ARR_SIZE; i++) { arr[i] = rand() % INT_MAX; }
+  for (i = 0; i < num_ints; i++) { arr[i] = 128; }
 
-  timer_start();
-  for (j = 0; j < 1000; j++) {
-    for (i = 0; i < ARR_SIZE; i++) { dummy = arr[i]; }
+  for (stride = 4; stride <= MAX_STRIDE; stride *= 2) {
+    timer_start();
+    dummy = 0;
+    for (j = 0; j < 10; j++) {
+      for (i = 0; i < ARR_SIZE; i += stride) {
+        dummy += arr[(i * stride) % lengthMod];
+      }
+    }
+    printf("stride %d\t%d B\ttime ", stride, stride * 4);
+    timer_stop();
   }
-  timer_stop();
 
-  timer_start();
-  for (j = 0; j < 1000; j++) {
-    for (i = 0; i < ARR_SIZE; i+=2) { dummy = arr[i]; }
-  }
-  timer_stop();
-
-  timer_start();
-  for (j = 0; j < 1000; j++) {
-    for (i = 0; i < ARR_SIZE; i+=4) { dummy = arr[i]; }
-  }
-  timer_stop();
-
-  timer_start();
-  for (j = 0; j < 1000; j++) {
-    for (i = 0; i < ARR_SIZE; i+=1024) { dummy = arr[i]; }
-  }
-  timer_stop();
+  free(arr);
 
   exit(0);
 }
