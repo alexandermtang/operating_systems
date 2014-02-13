@@ -18,12 +18,12 @@ int main(int argc, char** argv)
   unsigned long block_size_B = block_size_MB * 1000; // convert from MB to B
 
   for (int i = 0; i < num_iters; i++) {
-    timer_start();
 
     // allocate memory for arr and initialize to 'a'
     char *arr = malloc(block_size_B);
     for (int j = 0; j < block_size_B; j++) { arr[j] = 'a'; }
 
+    timer_start();
     int pid = fork();
     if (pid == 0) {
       // child
