@@ -11,8 +11,8 @@
 #define MB (1024 * KB)
 #define ARR_SIZE (8 * MB)
 #define MAX_STRIDE (1024 * B)
-#define REPS ARR_SIZE
-#define SETS 20
+#define REPS (32 * 1024 * 1024)
+#define SETS 10
 
 void find_cache_line_size(void)
 {
