@@ -47,7 +47,7 @@ int main(int argc, char** argv)
   for (i = 0; i < NUM_ITERS; i++) { fork_avg += fork_times[i]; }
   fork_avg /= NUM_ITERS;
 
-  printf("avg cost of fork for %lu MB block: %.2f us\n", block_size_MB, fork_avg);
+  printf("avg cost of fork for %lu MB block: %.2f usec\n", block_size_MB, fork_avg);
 
   exit(0);
 }

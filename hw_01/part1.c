@@ -34,11 +34,14 @@ void find_cache_line_size(void)
       }
     }
 
-    stride_times[iter_num++] = timer_stop(); // record time
+    unsigned long long t = timer_stop();
+    stride_times[iter_num++] = t; // record time
+    printf("stride %d B\ttime %llu usec\n", stride, t);
   }
 
+  // calculate largest difference in times
   for (i = 0; i < iter_num; i++) {
-    printf("stride %d B\ttime %d usec\n", (int)pow(2, i), stride_times[i]);
+    /*printf("stride %d B\ttime %d usec\n", (int)pow(2, i), stride_times[i]);*/
   }
 
   free(arr);
