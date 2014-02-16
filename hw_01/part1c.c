@@ -14,7 +14,7 @@
 #define REPS (32 * 1024 * 1024)
 #define SETS 10
 
-void find_cache_line_size(void)
+int main(int argc, char** argv)
 {
   char *arr = malloc(ARR_SIZE);
   int lengthMod = ARR_SIZE - 1;
@@ -45,11 +45,6 @@ void find_cache_line_size(void)
   }
 
   free(arr);
-}
-
-int main(int argc, char** argv)
-{
-  find_cache_line_size();
 
   exit(0);
 }

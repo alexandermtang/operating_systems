@@ -17,7 +17,7 @@ int main(int argc, char** argv)
   unsigned long long fork_times[NUM_ITERS];
 
   unsigned long block_size_MB = (int)strtol(argv[1], NULL, 10);
-  unsigned long block_size_B = block_size_MB * 1000; // convert from MB to B
+  unsigned long block_size_B = block_size_MB * 1024; // convert from MB to B
 
   int i = 0, j = 0;
 
