@@ -21,27 +21,25 @@ int main(int argc, char** argv)
 
   int i = 0, j = 0;
 
+  // allocate memory for arr and initialize to 'a'
+  char *arr = malloc(block_size_B);
+  for (j = 0; j < block_size_B; j++) { arr[j] = 'a'; }
+
   for (i = 0; i < NUM_ITERS; i++) {
-
-    // allocate memory for arr and initialize to 'a'
-    char *arr = malloc(block_size_B);
-    for (j = 0; j < block_size_B; j++) { arr[j] = 'a'; }
-
     timer_start();
     int pid = fork();
     if (pid == 0) {
       // child
-      free(arr);
       exit(0);
     } else {
       // parent
       waitpid(pid, NULL, 0); // wait for child to return
-      free(arr);
       unsigned long long t = timer_stop();
       fork_times[i] = t;
-      printf("time %llu\n", t);
     }
   }
+
+  free(arr);
 
   // calculate avg cost of fork
   double fork_avg = 0.0;
