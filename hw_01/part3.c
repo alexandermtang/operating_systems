@@ -15,8 +15,8 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  unsigned long block_size_MB = (int)strtol(argv[1], NULL, 10);
-  unsigned long block_size_B = block_size_MB * 1024; // convert from MB to B
+  unsigned long long block_size_MB = (int)strtol(argv[1], NULL, 10);
+  unsigned long long block_size_B = block_size_MB * 1024 * 1024; // convert from MB to B
   int num_chunks = block_size_B / CHUNK_SIZE;
 
   int p2c[2]; // parent to child pipe
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
   for (i = 0; i < NUM_ITERS; i++) { pipe_avg += pipe_times[i]; }
   pipe_avg /= NUM_ITERS;
 
-  printf("avg cost of pipe communication for %lu MB block: %f usec\n",
+  printf("avg cost of pipe communication for %llu MB block: %f usec\n",
       block_size_MB, pipe_avg);
 
   exit(0);
