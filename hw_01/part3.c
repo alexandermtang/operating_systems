@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 
   unsigned long long block_size_MB = (int)strtol(argv[1], NULL, 10);
   unsigned long long block_size_B = block_size_MB * 1024 * 1024; // convert from MB to B
-  int num_chunks = block_size_B / CHUNK_SIZE;
+  unsigned long long num_chunks = block_size_B / CHUNK_SIZE;
 
   int p2c[2]; // parent to child pipe
   int c2p[2]; // child to parent pipe
@@ -36,13 +36,15 @@ int main(int argc, char** argv)
       close(p2c[1]);
       close(c2p[0]);
 
-      char block[block_size_B];
+      char *block = malloc(block_size_B);
+
       for (j = 0; j < num_chunks; j++) {
         read(p2c[0], &block[j * CHUNK_SIZE], CHUNK_SIZE);
       }
       for (j = 0; j < num_chunks; j++) {
         write(c2p[1], &block[j * CHUNK_SIZE], CHUNK_SIZE);
       }
+      free(block);
 
       close(p2c[0]);
       close(c2p[1]);
@@ -52,7 +54,9 @@ int main(int argc, char** argv)
       close(p2c[0]);
       close(c2p[1]);
 
-      char block[block_size_B];
+      char *block = malloc(block_size_B);
+      for (j = 0; j < block_size_B; j++) { block[j] = 'a'; }
+
       for (j = 0; j < num_chunks; j++) {
         write(p2c[1], &block[j * CHUNK_SIZE], CHUNK_SIZE);
       }
@@ -60,6 +64,7 @@ int main(int argc, char** argv)
         read(c2p[0], &block[j * CHUNK_SIZE], CHUNK_SIZE);
       }
       waitpid(pid, NULL, 0);
+      free(block);
 
       close(p2c[1]);
       close(c2p[0]);
