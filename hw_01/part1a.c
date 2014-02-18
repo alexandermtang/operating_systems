@@ -17,12 +17,12 @@
 // find cache line size
 int main(int argc, char** argv)
 {
-  char *arr = malloc(ARR_SIZE);
   int lengthMod = ARR_SIZE - 1;
   int i = 0, j = 0, stride = 0, dummy = 0, iter_num = 0;
   int stride_times[(int)log2(MAX_STRIDE)];
 
-  // initialize arr
+  // allocate and initialize arr
+  char *arr = malloc(ARR_SIZE);
   for (i = 0; i < ARR_SIZE; i++) { arr[i] = 'a'; }
 
   for (stride = 1; stride <= MAX_STRIDE; stride *= 2) {
