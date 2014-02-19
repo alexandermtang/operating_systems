@@ -11,7 +11,6 @@
 #define MB (1024 * KB)
 #define LINE_SIZE (64 * B)    // determined from ./part1a
 #define CACHE_SIZE (256 * KB) // determined from ./part1b
-#define TOTAL_SIZE (8 * MB)
 #define NUM_ITERS 10000
 
 // find cache miss penalty
