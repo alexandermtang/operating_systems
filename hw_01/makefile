@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall -g
 
 build:
-	make my_timer.o part1a.o part1b.o part1c.o part2.o
+	make my_timer.o part1a.o part1b.o part1c.o part2.o part3.o
 	make part1a part1b part1c part2 part3
 
 clean:
