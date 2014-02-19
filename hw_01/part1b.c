@@ -9,7 +9,7 @@
 #define B 1
 #define KB (1024 * B)
 #define MB (1024 * KB)
-#define LINE_SIZE (64 * B)  // determined using ./part1a
+#define LINE_SIZE (64 * B)  //determined from ./part1a
 #define TOTAL_SIZE (8 * MB)
 #define NUM_ITERS 100
 #define REPS (1024 * 256)
@@ -20,9 +20,8 @@ int main(int argc, char** argv)
   int i = 0, j = 0, dummy = 0, cache_size_guess = 0;
   unsigned long long times[NUM_ITERS];
 
-  /*for (cache_size_guess = (250 * KB); cache_size_guess < TOTAL_SIZE; cache_size_guess+=KB) {*/
+  // keep guessing cache sizes of power 2 starting with LINE_SIZE
   for (cache_size_guess = LINE_SIZE; cache_size_guess < TOTAL_SIZE; cache_size_guess*=2) {
-  /*for (cache_size_guess = 6291136; cache_size_guess < TOTAL_SIZE; cache_size_guess+=LINE_SIZE) {*/
     char *arr = malloc(cache_size_guess);
     for (i = 0; i < cache_size_guess; i++) { arr[i] = 'a'; }
 
