@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     for (i = 0; i < NUM_ITERS; i++) { time_avg += times[i]; }
     time_avg /= NUM_ITERS;
 
-    printf("cache_size_guess %d B\ttime %f\n", cache_size_guess, time_avg);
+    printf("cache_size_guess %d B\ttime %f usec\n", cache_size_guess, time_avg);
     free(arr);
   }
 
