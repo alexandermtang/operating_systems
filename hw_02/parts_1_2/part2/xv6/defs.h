@@ -152,8 +152,10 @@ void            timerinit(void);
 // trap.c
 void            idtinit(void);
 extern uint     ticks;
+extern uint     icount;
 void            tvinit(void);
 extern struct spinlock tickslock;
+extern struct spinlock icountlock;
 
 // uart.c
 void            uartinit(void);
