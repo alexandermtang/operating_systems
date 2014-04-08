@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define n 20
+#define n 30
 
 int a[n + 1], sorted = 0;
 int *indices[n];
@@ -72,18 +72,11 @@ void *compare_and_swap(void *arg)
 }
 
 void *check_if_sorted(void *arg) {
-  while (!sorted) {
-    int i = 0, temp = 0;
-    for (i = 0; i < n; i++) {
-      if (a[i + 1] > a[i]) {
-        temp = 0;
-        break;
-      } else {
-        temp = 1;
-      }
-    }
-    sorted = temp;
+  int i = 0;
+  for (i = 0; i < n; i++) {
+    while (a[i + 1] > a[i]);
   }
+  sorted = 1;
   return NULL;
 }
 
