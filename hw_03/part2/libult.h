@@ -6,6 +6,6 @@
 #define ERR_MAXTHREADS -2
 
 int mypthread_create();
-int mypthread_exit();
-int mypthread_yield();
-int mypthread_join();
+void mypthread_exit();
+void mypthread_yield(void);
+int mypthread_join(void);
