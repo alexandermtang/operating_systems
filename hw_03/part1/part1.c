@@ -24,8 +24,9 @@ void init(void)
 {
   int i = 0;
   for (i = 0; i < n + 1; i++) {
-    a[i] = rand() % 100;
+    a[i] = n - i;
   }
+  a[n] = 100;
   print_a();
 
   for (i = 0; i < n + 1; i++) {
@@ -71,10 +72,13 @@ void *compare_and_swap(void *arg)
   return NULL;
 }
 
+// how to foolproof check?
 void *check_if_sorted(void *arg) {
   int i = 0;
   for (i = 0; i < n; i++) {
-    while (a[i + 1] > a[i]);
+    if (a[i + 1] > a[i]) {
+      i = 0;
+    }
   }
   sorted = 1;
   return NULL;
