@@ -27,7 +27,6 @@ void init(void)
     a[i] = n - i;
   }
   a[n] = 100;
-  print_a();
 
   for (i = 0; i < n + 1; i++) {
     pthread_mutex_init(&mutexes[i], NULL);
@@ -87,7 +86,10 @@ void *check_if_sorted(void *arg) {
 int main(void)
 {
   init();
+  printf("unsorted: ");
+  print_a();
   cleanup();
+  printf("  sorted: ");
   print_a();
 
   return 0;
