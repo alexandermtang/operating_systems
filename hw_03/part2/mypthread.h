@@ -1,7 +1,7 @@
 #ifndef MYPTHREAD_H
 #define MYPTHREAD_H
 
-#define MAX_THREADS 10
+#define MAX_THREADS 100
 #define THREAD_STACK_SIZE (1024*1024)
 
 #define NOERROR 0

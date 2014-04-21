@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <pthread.h>
 #include "mypthread.h"
 
 #define n 20
 
 int a[n + 1], sorted = 0;
 int *indices[n];
-pthread_t threads[n], checker;
+mypthread_t threads[n], checker;
 mypthread_mutex_t mutexes[n + 1];
 
 void *compare_and_swap(void *arg);
@@ -28,7 +27,6 @@ void init(void)
   for (i = 0; i < n + 1; i++) {
     a[i] = i;
   }
-  print_a();
 
   for (i = 0; i < n + 1; i++) {
     mypthread_mutex_init(&mutexes[i]);
@@ -37,16 +35,16 @@ void init(void)
   for (i = 0; i < n; i++) {
     indices[i] = malloc(sizeof(int));
     *indices[i] = i;
-    pthread_create(&threads[i], NULL, &compare_and_swap, (void *) indices[i]);
+    mypthread_create(&threads[i], &compare_and_swap, (void *) indices[i]);
   }
-  pthread_create(&checker, NULL, &check_if_sorted, NULL);
+  mypthread_create(&checker, &check_if_sorted, NULL);
 }
 
 void cleanup(void)
 {
   int i = 0;
   for (i = 0; i < n; i++) {
-    pthread_join(threads[i], NULL);
+    mypthread_join(threads[i]);
   }
   for (i = 0; i < n + 1; i++) {
     mypthread_mutex_destroy(&mutexes[i]);
@@ -69,6 +67,7 @@ void *compare_and_swap(void *arg)
     }
     mypthread_mutex_unlock(&mutexes[i]);
     mypthread_mutex_unlock(&mutexes[i + 1]);
+    mypthread_yield();
   }
   return NULL;
 }
@@ -80,6 +79,7 @@ void *check_if_sorted(void *arg) {
     if (a[i + 1] > a[i]) {
       i = 0;
     }
+    mypthread_yield();
   }
   sorted = 1;
   return NULL;
@@ -88,7 +88,11 @@ void *check_if_sorted(void *arg) {
 int main(void)
 {
   init();
+  printf("unsorted: ");
+  print_a();
+  mypthread_yield();
   cleanup();
+  printf("  sorted: ");
   print_a();
 
   return 0;

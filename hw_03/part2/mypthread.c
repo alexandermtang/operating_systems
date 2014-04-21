@@ -8,16 +8,15 @@ int current_thread = -1;
 int in_thread = 0;
 int num_threads = 0;
 
-ucontext_t scheduler;
+ucontext_t main_context;
 
-int mypthread_run(void *(*func)(void *), void *arg)
+void mypthread_run(void (*func)(void *), void *arg)
 {
   thread_list[current_thread].active = 1;
   func(arg);
   thread_list[current_thread].active = 0;
 
   mypthread_yield();
-  return 0;
 }
 
 int mypthread_create(mypthread_t *thread, void *(*func)(void *), void *arg)
@@ -35,7 +34,7 @@ int mypthread_create(mypthread_t *thread, void *(*func)(void *), void *arg)
   if (thread_list[num_threads].stack == 0) return ERR_MALLOC;
 
   *thread = thread_list[num_threads];
-  makecontext(&thread_list[num_threads].context, (void (*)(void))mypthread_run, 2, &func, &arg); // not sure if right
+  makecontext(&thread_list[num_threads].context, (void (*)(void)) &mypthread_run, 2, func, arg); // not sure if right
   num_threads++;
 
   return NOERROR;
@@ -44,12 +43,14 @@ int mypthread_create(mypthread_t *thread, void *(*func)(void *), void *arg)
 void mypthread_exit(void)
 {
   thread_list[current_thread].active = 0;
-  swapcontext(&thread_list[current_thread].context, &scheduler);
+  swapcontext(&thread_list[current_thread].context, &main_context);
 }
 
 int mypthread_join(mypthread_t thread)
 {
-  swapcontext(&thread_list[current_thread].context, &thread.context); // not sure if right
+  while (thread.active != 0) {
+    mypthread_yield();
+  }
 
   return NOERROR;
 }
@@ -57,22 +58,28 @@ int mypthread_join(mypthread_t thread)
 void mypthread_yield(void)
 {
   if (in_thread) {
-  // swap from thread to scheduler
-    swapcontext(&thread_list[current_thread].context, &scheduler);
+  // swap from thread to main_context
+    swapcontext(&thread_list[current_thread].context, &main_context);
   } else {
-  // in scheduler, so dispatch another thread
+  // in main_context, so dispatch another thread
 
    while (num_threads > 0) {
      current_thread = (current_thread + 1) % num_threads;
 
      in_thread = 1;
-     swapcontext(&scheduler, &thread_list[current_thread].context);
+     swapcontext(&main_context, &thread_list[current_thread].context);
      in_thread = 0;
 
      if (thread_list[current_thread].active == 0) {
        // thread is finished executing, clean up
        free(thread_list[current_thread].stack);
        num_threads--;
+
+       // current_thread is empty, swap with last one
+       if (current_thread != num_threads) {
+         thread_list[current_thread] = thread_list[num_threads];
+       }
+       thread_list[num_threads].active = 0;
      }
    }
   }
