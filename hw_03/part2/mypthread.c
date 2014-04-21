@@ -1,13 +1,7 @@
-#include "libult.h"
-
 #include <stdlib.h>
 #include <ucontext.h>
 
-typedef struct {
-  ucontext_t context;
-  int active; // maybe change this to state {UNUSED, RUNNING, ZOMBIE}
-  void *stack;
-} mypthread_t;
+#include "mypthread.h"
 
 mypthread_t thread_list[MAX_THREADS];
 int current_thread = -1;
@@ -23,9 +17,10 @@ int mypthread_run(void *(*func)(void *), void *arg)
   thread_list[current_thread].active = 0;
 
   mypthread_yield();
+  return 0;
 }
 
-int mypthread_create(void *(*func)(void *), void *arg)
+int mypthread_create(mypthread_t *thread, void *(*func)(void *), void *arg)
 {
   if (num_threads == MAX_THREADS) return ERR_MAXTHREADS;
 
@@ -39,16 +34,24 @@ int mypthread_create(void *(*func)(void *), void *arg)
 
   if (thread_list[num_threads].stack == 0) return ERR_MALLOC;
 
-  makecontext(&thread_list[num_threads].context, mypthread_run, 2, &func, &arg);
+  *thread = thread_list[num_threads];
+  makecontext(&thread_list[num_threads].context, (void (*)(void))mypthread_run, 2, &func, &arg); // not sure if right
   num_threads++;
 
   return NOERROR;
 }
 
-void mypthread_exit()
+void mypthread_exit(void)
 {
   thread_list[current_thread].active = 0;
   swapcontext(&thread_list[current_thread].context, &scheduler);
+}
+
+int mypthread_join(mypthread_t thread)
+{
+  swapcontext(&thread_list[current_thread].context, &thread.context); // not sure if right
+
+  return NOERROR;
 }
 
 void mypthread_yield(void)
@@ -74,3 +77,45 @@ void mypthread_yield(void)
    }
   }
 }
+
+uint xchg(volatile uint *addr, uint newval)
+{
+  uint result;
+  asm volatile("lock; xchgl %0, %1"
+               : "+m" (*addr), "=a" (result)
+               : "1" (newval)
+               : "cc");
+  return result;
+}
+
+int mypthread_mutex_init(mypthread_mutex_t *mutex)
+{
+  mutex->locked = 0;
+  return 0;
+}
+
+int mypthread_mutex_lock(mypthread_mutex_t *mutex)
+{
+  while(xchg(&mutex->locked, 1) != 0);
+  return 0;
+}
+
+int mypthread_mutex_trylock(mypthread_mutex_t *mutex)
+{
+  if(xchg(&mutex->locked, 1) == 0) {
+    return 0;
+  }
+  return -1;
+}
+
+int mypthread_mutex_unlock(mypthread_mutex_t *mutex)
+{
+  xchg(&mutex->locked, 0);
+  return 0;
+}
+
+int mypthread_mutex_destroy(mypthread_mutex_t *mutex)
+{
+  return 0;
+}
+
