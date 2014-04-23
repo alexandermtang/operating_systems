@@ -5,6 +5,8 @@
 
 #define n 20
 
+// Same program as part 1 using "mypthread.h" instead of <pthread.h>.
+
 int a[n + 1], sorted = 0;
 int *indices[n];
 mypthread_t threads[n], checker;
@@ -44,7 +46,7 @@ void cleanup(void)
 {
   int i = 0;
   for (i = 0; i < n; i++) {
-    mypthread_join(&threads[i]);
+    mypthread_join(threads[i]);
   }
   for (i = 0; i < n + 1; i++) {
     mypthread_mutex_destroy(&mutexes[i]);
