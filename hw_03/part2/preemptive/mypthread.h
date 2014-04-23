@@ -11,9 +11,11 @@
 #include <ucontext.h>
 #include <stdlib.h>
 
+enum threadstate { RUNNING, ZOMBIE };
+
 typedef struct mypthread_t {
   ucontext_t context;
-  int active; // maybe change this to state {UNUSED, RUNNING, ZOMBIE}
+  enum threadstate state;
   void *stack;
 } mypthread_t;
 
