@@ -44,7 +44,7 @@ void cleanup(void)
 {
   int i = 0;
   for (i = 0; i < n; i++) {
-    mypthread_join(threads[i]);
+    mypthread_join(&threads[i]);
   }
   for (i = 0; i < n + 1; i++) {
     mypthread_mutex_destroy(&mutexes[i]);

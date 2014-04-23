@@ -11,7 +11,7 @@
 #include <ucontext.h>
 #include <stdlib.h>
 
-enum threadstate { ZOMBIE, RUNNING };
+enum threadstate { ZOMBIE = 0, RUNNING = 1 };
 
 typedef struct mypthread_t {
   ucontext_t context;
@@ -25,7 +25,7 @@ typedef struct mypthread_mutex_t {
 
 int mypthread_create(mypthread_t *thread, void *(*func)(void *), void *arg);
 void mypthread_exit(void);
-int mypthread_join(mypthread_t thread);
+int mypthread_join(mypthread_t *thread);
 void mypthread_yield(void);
 
 int mypthread_mutex_init(mypthread_mutex_t *mutex);

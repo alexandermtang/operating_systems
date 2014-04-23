@@ -50,9 +50,9 @@ void mypthread_exit(void)
 }
 
 // Current thread yields until thread.state == ZOMBIE.
-int mypthread_join(mypthread_t thread)
+int mypthread_join(mypthread_t *thread)
 {
-  while (thread.state != ZOMBIE) {
+  while (thread->state != ZOMBIE) {
     mypthread_yield();
   }
 
