@@ -11,7 +11,7 @@
 #include <ucontext.h>
 #include <stdlib.h>
 
-enum threadstate { RUNNING, ZOMBIE };
+enum threadstate { ZOMBIE, RUNNING };
 
 typedef struct mypthread_t {
   ucontext_t context;
