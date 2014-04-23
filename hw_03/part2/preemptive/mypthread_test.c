@@ -3,7 +3,7 @@
 
 #include "mypthread.h"
 
-#define n 20
+#define n 5
 
 int a[n + 1], sorted = 0;
 int *indices[n];
@@ -44,7 +44,7 @@ void cleanup(void)
 {
   int i = 0;
   for (i = 0; i < n; i++) {
-    mypthread_join(threads[i]);
+    mypthread_join(&threads[i]);
   }
   for (i = 0; i < n + 1; i++) {
     mypthread_mutex_destroy(&mutexes[i]);
@@ -67,7 +67,6 @@ void *compare_and_swap(void *arg)
     }
     mypthread_mutex_unlock(&mutexes[i]);
     mypthread_mutex_unlock(&mutexes[i + 1]);
-    mypthread_yield();
   }
   return NULL;
 }
@@ -79,7 +78,6 @@ void *check_if_sorted(void *arg) {
     if (a[i + 1] > a[i]) {
       i = 0;
     }
-    mypthread_yield();
   }
   sorted = 1;
   return NULL;
@@ -90,7 +88,6 @@ int main(void)
   init();
   printf("unsorted: ");
   print_a();
-  mypthread_yield();
   cleanup();
   printf("  sorted: ");
   print_a();
